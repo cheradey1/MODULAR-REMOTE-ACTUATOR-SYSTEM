@@ -1,0 +1,5 @@
+{
+  "name": "Modular Remote Actuator System",
+  "description": "A modular mechanical actuator platform designed to remotely press buttons, switches, or triggers on physical devices.",
+  "requestFramePermissions": []
+}
