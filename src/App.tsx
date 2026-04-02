@@ -82,14 +82,17 @@ const SystemStatus = () => (
 
 const YouTubeBackground = () => (
   <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-    <iframe
-      className="absolute top-1/2 left-1/2 w-[300%] h-[300%] -translate-x-1/2 -translate-y-1/2 opacity-30 grayscale"
-      src="https://www.youtube.com/embed/1E02iO8UoOk?autoplay=1&mute=1&loop=1&playlist=1E02iO8UoOk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1"
-      allow="autoplay; encrypted-media"
-      frameBorder="0"
-    />
-    <div className="absolute inset-0 bg-brand-bg/60 backdrop-blur-[2px]" />
-    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-bg/40 to-brand-bg" />
+    <video
+      className="absolute inset-0 w-full h-full object-cover opacity-60"
+      autoPlay
+      muted
+      loop
+      playsInline
+    >
+      <source src="./images/background.mp4" type="video/mp4" />
+    </video>
+    <div className="absolute inset-0 bg-brand-bg/40" />
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-bg/30 to-brand-bg" />
   </div>
 );
 
@@ -159,20 +162,7 @@ export default function App() {
 
       {/* Hero Section */}
       <header className="relative h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          {/* Background Video with Poster */}
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            className="w-full h-full object-cover opacity-40 grayscale"
-            poster="/images/hero.jpg"
-          >
-            <source src="/images/background.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/20 to-brand-bg/80" />
-        </div>
+        <YouTubeBackground />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
           <motion.div
@@ -205,7 +195,7 @@ export default function App() {
             >
               <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
               <img 
-                src="/images/hero.jpg" 
+                src="./images/hero.jpg" 
                 alt="Drone Production Workshop" 
                 className="relative rounded-xl border border-white/10 w-full max-w-2xl h-48 object-cover grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
               />
@@ -331,7 +321,7 @@ export default function App() {
             >
               <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
               <img 
-                src="/images/hero.jpg" 
+                src="./images/hero.jpg" 
                 alt="System Architecture" 
                 className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
               />
@@ -345,7 +335,7 @@ export default function App() {
             >
               <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
               <img 
-                src="/images/Detali1.png" 
+                src="./images/Detali1.png" 
                 alt="System Details 1" 
                 className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
               />
@@ -359,7 +349,7 @@ export default function App() {
             >
               <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
               <img 
-                src="/images/Detali2.png" 
+                src="./images/Detali2.png" 
                 alt="System Details 2" 
                 className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
               />
@@ -542,41 +532,6 @@ export default function App() {
             ))}
           </div>
 
-          {/* Key Insight */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="bg-brand-primary/10 border border-brand-primary/30 rounded-xl p-8 mb-12"
-          >
-            <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-              <span className="text-3xl">💡</span> Головна ідея
-            </h3>
-            <div className="space-y-3 text-white/70">
-              <p>
-                <strong className="text-white">❌ Помилка:</strong> Купити zaводи (€50k+) і сподіватися, що люди купуватимуть
-              </p>
-              <p>
-                <strong className="text-brand-primary">✅ Реальність:</strong> Почати з €300, перевірити попит, тільки потім масштабувати
-              </p>
-              <p className="text-sm pt-2 text-white/50">
-                90% стартапів вмирають не через відсутність обладнання, а через відсутність попиту.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Action */}
-          <div className="text-center">
-            <p className="text-white/60 text-lg mb-6">
-              Готові почати прямо зараз? Замовте комплект для випробування!
-            </p>
-            <a 
-              href="mailto:andriy.liashkevich@gmail.com?subject=Купія прообраз - Modular Actuator"
-              className="inline-block bg-brand-primary text-black px-12 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors hover:scale-105 transform"
-            >
-              ЗАМОВИТИ ПРООБРАЗ
-            </a>
-          </div>
         </div>
       </section>
 
