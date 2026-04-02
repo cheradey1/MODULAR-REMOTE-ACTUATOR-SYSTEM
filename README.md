@@ -1,20 +1,153 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🚀 MODULAR REMOTE ACTUATOR SYSTEM
 
-# Run and deploy your AI Studio app
+**Модульна система дистанційного керування для натискання кнопок, перемикачів та тригерів на фізичних пристроях.**
 
-This contains everything you need to run your app locally.
+> Виконувати складні завдання автоматизації - від дронів до роботів до промислового тестування.
 
-View your app in AI Studio: https://ai.studio/apps/40a8562e-7a9c-4845-86d5-d40b79134758
+---
 
-## Run Locally
+## ✨ Особливості
 
-**Prerequisites:**  Node.js
+- 🔄 **Модульна архітектура** - легко замінюються деталі
+- 🖨️ **3D моделі всіх деталей** - STL формат для друку
+- 🔋 **Інтегрована батарея** - бездротова робота
+- 🎯 **Точне керування** - надійні натиски
+- 🌍 **Open Source** - MIT ліцензія
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🚀 Швидкий старт
+
+### Вимоги
+- Node.js 16+
+- npm або yarn
+
+### Встановлення
+
+```bash
+# Клонуй репозиторій
+git clone https://github.com/cheradey1/MODULAR-REMOTE-ACTUATOR-SYSTEM.git
+cd modular-remote-actuator-system
+
+# Встанови залежності
+npm install
+
+# Запусти локально
+npm run dev
+```
+
+Сайт буде доступний на **http://localhost:3000**
+
+### Збірка для продакшену
+
+```bash
+npm run build
+```
+
+---
+
+## 📁 Структура проекту
+
+```
+modular-remote-actuator-system/
+├── src/
+│   ├── App.tsx              # Головний React компонент
+│   ├── main.tsx             # Вхідна точка
+│   ├── index.css            # Tailwind стилі
+│   └── components/          # React компоненти
+├── public/
+│   ├── images/              # Картинки сайту
+│   │   ├── hero.jpg         # Головна картинка
+│   │   ├── Detali1.png      # Архітектура
+│   │   ├── Detali2.png      # Деталі
+│   │   └── background.mp4   # Фонове відео
+│   └── models/              # 3D моделі STL
+│       ├── frame_beam.stl
+│       ├── motor_mount.stl
+│       ├── battery_mount.stl
+│       └── cam.stl
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+```
+
+---
+
+## 🏗️ Архітектура системи
+
+### Три основні модулі:
+
+1. **Structural Frame** 
+   - Жорсткий каркас з переробленого пластику
+   - 3D друк або впорскування
+
+2. **Actuation Module**
+   - Двигун постійного струму + кулачковий механізм
+   - Надійна передача руху на кнопку
+
+3. **Power Module**
+   - Інтегрована батарея + контролер
+   - Бездротове керування
+
+---
+
+## 💡 Стартап-стратегія: 4 етапи
+
+### **Етап 1: MVP (€300)**
+- 1× 3D принтер
+- Надрукуй 20-50 комплектів
+- Продавай на OLX/Etsy/TikTok
+- **Ціль**: 10-50 продажів ✓
+
+### **Етап 2: Маркетинг (€500-3k)**
+- TikTok / YouTube контент
+- Discord сервер
+- **Ціль**: 100-500 продажів
+
+### **Етап 3: Масштаб (€3k-10k)**
+- Замовити в Китаї/Україні
+- Без вложення в свої станки
+- **Ціль**: 1000+ комплектів
+
+### **Етап 4: Завод (€50k+)**
+- ТІЛЬКИ якщо попит стабільний
+- Своя ін'єкційна машина
+
+---
+
+## 💰 Де купити
+
+- 🛒 **OLX** - місцеві покупці
+- 🌐 **Etsy** - міжнародна аудиторія
+- 📱 **TikTok** - молода аудиторія
+- 💬 **Reddit** - сообщество DIY
+
+---
+
+## 🤝 Як допомогти
+
+1. Fork репозиторій
+2. Створи branch: `git checkout -b feature/nova-ідея`
+3. Зроби зміни та коміт: `git commit -m 'Додав...'`
+4. Пушни: `git push origin feature/nova-ідея`
+5. Відкрий Pull Request
+
+---
+
+## 📄 Ліцензія
+
+MIT License - дивись [LICENSE](./LICENSE)
+
+---
+
+## 📧 Контакти
+
+- **Email**: andriy.liashkevich@gmail.com
+- **GitHub**: [@cheradey1](https://github.com/cheradey1)
+- **Демо сайт**: https://modular-actuator.vercel.app
+
+---
+
+## 🙏 Дякую!
+
+Якщо проект тобі подобається - лайк ⭐ на GitHub!
