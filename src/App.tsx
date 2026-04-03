@@ -106,13 +106,21 @@ const BrandLogo = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
-    className="fixed bottom-8 right-80 z-30 hidden md:block"
+    className="fixed bottom-8 left-8 z-30 hidden md:block"
   >
-    <img
-      src={`${import.meta.env.BASE_URL}images/logo.png`}
-      alt="Modular Remote Actuator System"
-      className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
-    />
+    <a
+      href="https://www.privat24.ua/send/j2l2d"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+      title="Скануй QR-код для пожертви"
+    >
+      <img
+        src={`${import.meta.env.BASE_URL}images/logo.png`}
+        alt="Modular Remote Actuator System - QR Code Donation"
+        className="h-44 w-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer rounded-lg border-2 border-brand-primary/20 hover:border-brand-primary/50"
+      />
+    </a>
   </motion.div>
 );
 
@@ -133,7 +141,7 @@ const DonateButtons = () => {
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="fixed bottom-8 right-8 z-40 flex flex-col gap-3"
+      className="fixed bottom-32 right-8 z-40 flex flex-col gap-3"
     >
       <AnimatePresence>
         {showDeveloperInfo && (
