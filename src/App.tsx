@@ -92,7 +92,7 @@ const YouTubeBackground = () => (
       loop
       playsInline
     >
-      <source src="./images/background.mp4" type="video/mp4" />
+      <source src={`${import.meta.env.BASE_URL}images/background.mp4`} type="video/mp4" />
     </video>
     <div className="absolute inset-0 bg-brand-bg/40" />
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-bg/30 to-brand-bg" />
@@ -127,7 +127,7 @@ const BackgroundMusic = () => {
     <>
       <audio
         ref={audioRef}
-        src="./images/background-music.mp3"
+        src={`${import.meta.env.BASE_URL}images/background-music.mp3`}
         loop
       />
       <motion.div
@@ -282,7 +282,7 @@ export default function App() {
             >
               <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
               <img 
-                src="./images/hero.jpg" 
+                src={`${import.meta.env.BASE_URL}images/hero.jpg`} 
                 alt="Drone Production Workshop" 
                 className="relative rounded-xl border border-white/10 w-full max-w-2xl h-48 object-cover grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
               />
@@ -460,7 +460,7 @@ export default function App() {
               <p className="max-w-md font-medium opacity-80">Всі деталі доступні для друку. Завантажте STL файли та зберіть свій актуатор самостійно.</p>
             </div>
             <a 
-              href="/models/all_models.zip" 
+              href={`${import.meta.env.BASE_URL}models/all_models.zip`} 
               className="bg-black text-white px-8 py-4 rounded-lg font-bold flex items-center gap-2 hover:bg-white hover:text-black transition-colors"
             >
               <Download className="w-5 h-5" /> ЗАВАНТАЖИТИ ВСЕ (.ZIP)
@@ -471,7 +471,7 @@ export default function App() {
             {['frame_beam.stl', 'motor_mount.stl', 'battery_mount.stl', 'cam.stl'].map((file) => (
               <a 
                 key={file} 
-                href={`/models/${file}`}
+                href={`${import.meta.env.BASE_URL}models/${file}`}
                 download
                 className="bg-black/5 border border-black/10 p-6 rounded-xl flex justify-between items-center group hover:bg-black hover:text-white transition-all cursor-pointer"
               >
