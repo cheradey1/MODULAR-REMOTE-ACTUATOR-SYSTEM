@@ -21,7 +21,10 @@ import {
   Activity,
   Volume2,
   Volume,
-  Pause
+  Pause,
+  Heart,
+  Copy,
+  Check
 } from 'lucide-react';
 
 const SectionTitle = ({ children, subtitle }: { children: React.ReactNode, subtitle?: string }) => (
@@ -98,6 +101,105 @@ const YouTubeBackground = () => (
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-bg/30 to-brand-bg" />
   </div>
 );
+
+const BrandLogo = () => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="fixed bottom-8 right-80 z-30 hidden md:block"
+  >
+    <img
+      src={`${import.meta.env.BASE_URL}images/MODULAR REMOTEACTUATOR SYSTEM.png`}
+      alt="Modular Remote Actuator System"
+      className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
+    />
+  </motion.div>
+);
+
+const DonateButtons = () => {
+  const [copied, setCopied] = useState(false);
+  const [showDeveloperInfo, setShowDeveloperInfo] = useState(false);
+
+  const developerCard = '4149497533883320';
+  const developerName = 'Liashkevich Nadia';
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="fixed bottom-8 right-8 z-40 flex flex-col gap-3"
+    >
+      <AnimatePresence>
+        {showDeveloperInfo && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="bg-brand-bg/90 backdrop-blur-lg border border-red-500/30 rounded-lg p-4 min-w-64 text-sm"
+          >
+            <p className="text-white/60 mb-2">❤️ Карта розробника:</p>
+            <div className="bg-black/50 p-3 rounded gap-2 flex items-center justify-between mb-3">
+              <code className="text-red-500 font-mono text-xs">{developerCard}</code>
+              <button
+                onClick={() => copyToClipboard(developerCard)}
+                className="hover:bg-red-500/20 p-1 rounded transition-colors"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4 text-white/60" />
+                )}
+              </button>
+            </div>
+            <p className="text-white/50 text-xs mb-1">Ім'я:</p>
+            <p className="text-white text-xs mb-3">{developerName}</p>
+            <p className="text-white/40 text-xs">💰 Ваш донат підтримує розробку та експерименти</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Кнопка донату розробнику */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowDeveloperInfo(!showDeveloperInfo)}
+        className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-colors group relative"
+        title="Донат розробнику"
+      >
+        <Heart className="w-5 h-5" />
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="absolute inset-0 rounded-full border border-red-500/40"
+        />
+      </motion.button>
+
+      {/* Кнопка донату проекту - посилання на Privat24 */}
+      <motion.a
+        href="https://www.privat24.ua/send/j2l2d"
+        target="_blank"
+        rel="noopener noreferrer"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className="w-12 h-12 rounded-full bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center text-brand-primary hover:bg-brand-primary/20 transition-colors group relative"
+        title="Донат проекту - Privat24"
+      >
+        <Zap className="w-5 h-5" />
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="absolute inset-0 rounded-full border border-brand-primary/40"
+        />
+      </motion.a>
+    </motion.div>
+  );
+};
 
 const BackgroundMusic = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -221,6 +323,8 @@ export default function App() {
     <div className="min-h-screen tech-grid selection:bg-brand-primary selection:text-black">
       <YouTubeBackground />
       <BackgroundMusic />
+      <DonateButtons />
+      <BrandLogo />
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-brand-bg/80 backdrop-blur-lg border-b border-white/10 py-4' : 'py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
