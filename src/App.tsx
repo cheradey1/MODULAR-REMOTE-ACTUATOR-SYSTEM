@@ -249,8 +249,6 @@ export default function App() {
 
       {/* Hero Section */}
       <header className="relative h-screen flex items-center overflow-hidden">
-        <YouTubeBackground />
-        
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
