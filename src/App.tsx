@@ -109,7 +109,7 @@ const BrandLogo = () => (
     className="fixed bottom-8 right-80 z-30 hidden md:block"
   >
     <img
-      src={`${import.meta.env.BASE_URL}images/MODULAR REMOTEACTUATOR SYSTEM.png`}
+      src={`${import.meta.env.BASE_URL}images/logo.png`}
       alt="Modular Remote Actuator System"
       className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
     />
