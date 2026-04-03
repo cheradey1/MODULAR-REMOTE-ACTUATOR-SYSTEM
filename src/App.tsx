@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Settings, 
@@ -18,7 +18,10 @@ import {
   Link as LinkIcon,
   Shield,
   Wrench,
-  Activity
+  Activity,
+  Volume2,
+  Volume,
+  Pause
 } from 'lucide-react';
 
 const SectionTitle = ({ children, subtitle }: { children: React.ReactNode, subtitle?: string }) => (
@@ -96,6 +99,88 @@ const YouTubeBackground = () => (
   </div>
 );
 
+const BackgroundMusic = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.3);
+  const [showVolumeControl, setShowVolumeControl] = useState(false);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  return (
+    <>
+      <audio
+        ref={audioRef}
+        src="./images/background-music.mp3"
+        loop
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="fixed bottom-8 right-8 z-40 flex items-center gap-4"
+      >
+        <AnimatePresence>
+          {showVolumeControl && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: 120 }}
+              exit={{ opacity: 0, width: 0 }}
+              className="flex items-center gap-3 bg-brand-bg/80 backdrop-blur-lg border border-white/10 px-4 py-3 rounded-full"
+            >
+              <Volume className="w-4 h-4 text-brand-primary flex-shrink-0" />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer accent-brand-primary"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={togglePlayPause}
+          onMouseEnter={() => setShowVolumeControl(true)}
+          onMouseLeave={() => setShowVolumeControl(false)}
+          className="w-12 h-12 rounded-full bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center text-brand-primary hover:bg-brand-primary/20 transition-colors group relative"
+        >
+          {isPlaying ? (
+            <Pause className="w-5 h-5 fill-current" />
+          ) : (
+            <Volume2 className="w-5 h-5" />
+          )}
+          <motion.div
+            animate={isPlaying ? { opacity: [0, 1, 0] } : { opacity: 0 }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute inset-0 rounded-full border border-brand-primary/60"
+          />
+        </motion.button>
+      </motion.div>
+    </>
+  );
+};
+
 const DemoVideo = ({ title, url, type = 'video' }: { title: string, url: string, type?: 'video' | 'youtube' }) => (
   <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black group h-full">
     <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1 bg-brand-primary/80 text-black text-[10px] font-bold rounded-full">
@@ -135,6 +220,7 @@ export default function App() {
   return (
     <div className="min-h-screen tech-grid selection:bg-brand-primary selection:text-black">
       <YouTubeBackground />
+      <BackgroundMusic />
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-brand-bg/80 backdrop-blur-lg border-b border-white/10 py-4' : 'py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
@@ -145,17 +231,18 @@ export default function App() {
             <span className="font-display font-bold text-xl tracking-tighter">MODULAR ACTUATOR</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-mono uppercase tracking-widest text-white/60">
-            <a href="#features" className="hover:text-brand-primary transition-colors">Особливості</a>
-            <a href="#architecture" className="hover:text-brand-primary transition-colors">Архітектура</a>
+            <a href="#about" className="hover:text-brand-primary transition-colors">Про проект</a>
+            <a href="#features" className="hover:text-brand-primary transition-colors">Можливості</a>
             <a href="#demo" className="hover:text-brand-primary transition-colors">Демо</a>
-            <a href="#roadmap" className="hover:text-brand-primary transition-colors">Шлях запуску</a>
-            <a href="#models" className="hover:text-brand-primary transition-colors">3D Моделі</a>
+            <a href="#usecases" className="hover:text-brand-primary transition-colors">Застосування</a>
+            <a href="#roadmap" className="hover:text-brand-primary transition-colors">Стан розробки</a>
+            <a href="#risks" className="hover:text-brand-primary transition-colors">Чесність</a>
           </div>
           <a 
-            href="mailto:andriy.liashkevich@gmail.com?subject=Order: Modular Remote Actuator Kit"
+            href="mailto:andriy.liashkevich@gmail.com?subject=Спільнокошт MRA - Інформація"
             className="bg-brand-primary text-black px-6 py-2 rounded font-bold text-sm hover:bg-white transition-colors"
           >
-            ЗАМОВИТИ
+            КОНТАКТИ
           </a>
         </div>
       </nav>
@@ -172,7 +259,7 @@ export default function App() {
           >
             <div className="flex items-center gap-4 mb-6">
               <span className="inline-block px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs font-mono rounded">
-                v1.0.4 REMOTE ACTUATION PLATFORM
+                R&D ЕТАП • СПІЛЬНОКОШТ準ПОДІЯ
               </span>
               <SystemStatus />
             </div>
@@ -183,7 +270,7 @@ export default function App() {
             
             <div className="mb-6">
               <span className="text-2xl md:text-3xl font-display font-bold text-white">
-                Modular Remote Actuator Kit — <span className="text-brand-primary">$120</span>
+                Майбутнє модульної автоматизації: <span className="text-brand-primary">від ідеї до першого прототипу</span>
               </span>
             </div>
 
@@ -205,17 +292,17 @@ export default function App() {
             </motion.div>
 
             <p className="max-w-2xl text-lg md:text-xl text-white/60 mb-10 leading-relaxed">
-              Fully assembled and tested modular actuation system with integrated motor, battery mount, and structural frame. Ready to deploy in drone, robotics, and automation applications.
+              Ми розробляємо універсальну систему дистанційної активації для дронів та робототехніки. Зараз ми на етапі R&D (досліджень та розробки) і готуємо запуск першої передсерійної партії. Кожен внесок наближає нас до реальності.
             </p>
             <div className="flex flex-wrap gap-4">
               <a 
-                href="mailto:andriy.liashkevich@gmail.com?subject=Order: Modular Remote Actuator Kit"
+                href="#about"
                 className="bg-brand-primary text-black px-8 py-4 rounded-lg font-bold flex items-center gap-2 hover:bg-white transition-colors"
               >
-                ЗАМОВИТИ ЗАРАЗ
+                📖 ДІЗНАТИСЬ БІЛЬШЕ
               </a>
-              <a href="#demo" className="border border-white/20 px-8 py-4 rounded-lg font-bold hover:bg-white/10 transition-colors flex items-center gap-2">
-                <Play className="w-5 h-5 fill-current" /> ДИВИТИСЯ ДЕМО
+              <a href="mailto:andriy.liashkevich@gmail.com?subject=MRA Спільнокошт - Інформація" className="border border-white/20 px-8 py-4 rounded-lg font-bold hover:bg-white/10 transition-colors flex items-center gap-2">
+                <Play className="w-5 h-5 fill-current" /> КОНТАКТИ
               </a>
             </div>
           </motion.div>
@@ -232,39 +319,69 @@ export default function App() {
         </motion.div>
       </header>
 
+      {/* About Project Section */}
+      <section id="about" className="py-24 max-w-7xl mx-auto px-6 bg-white/5">
+        <div className="max-w-4xl">
+          <SectionTitle subtitle="STATUS: R&D">ВІД КОНЦЕПТУ ДО РЕАЛЬНОСТІ</SectionTitle>
+          <div className="space-y-6 text-white/70 mb-12">
+            <p className="text-xl leading-relaxed">
+              <span className="text-brand-primary font-bold">Modular Remote Actuator</span> — це не просто залізо. Це гнучка екосистема, що дозволяє автоматизувати фізичні процеси там, де неможливо втрутитися в електроніку.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="glass-card p-6">
+              <h4 className="text-brand-primary font-mono text-xs mb-2">STATUS</h4>
+              <p className="text-xl font-bold">Прототипування</p>
+              <p className="text-sm text-white/50 mt-2">Підбір постачальників, тестування механіки</p>
+            </div>
+            <div className="glass-card p-6">
+              <h4 className="text-brand-primary font-mono text-xs mb-2">МЕТА</h4>
+              <p className="text-xl font-bold">Збір коштів</p>
+              <p className="text-sm text-white/50 mt-2">На першу партію комплектуючих та польові експерименти</p>
+            </div>
+            <div className="glass-card p-6">
+              <h4 className="text-brand-primary font-mono text-xs mb-2">ТЕРМІНИ</h4>
+              <p className="text-xl font-bold">3-4 місяці</p>
+              <p className="text-sm text-white/50 mt-2">Готовність першої партії з моменту збору</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section id="features" className="py-24 max-w-7xl mx-auto px-6">
-        <SectionTitle subtitle="CORE CAPABILITIES">КЛЮЧОВІ ОСОБЛИВОСТІ</SectionTitle>
+        <SectionTitle subtitle="TECHNICAL CAPABILITIES">МОЖЛИВОСТІ СИСТЕМИ</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <FeatureCard 
             icon={Box} 
-            title="Модульні балки" 
-            description="Квадратні пластикові балки з монтажними отворами по всьому периметру для максимальної гнучкості."
+            title="Модульна архітектура" 
+            description="Квадратні балки з переробленого пластику — міцність, яку ми вдосконалюємо з кожним ітераційним друком."
           />
           <FeatureCard 
             icon={Wrench} 
-            title="Регульована збірка" 
-            description="Металеві стрижні з різьбою дозволяють точно налаштовувати розміри та конфігурацію системи."
+            title="Точне налаштування" 
+            description="Метричні різьбові стрижні адаптуються під будь-які габарити вашого пристрою."
           />
           <FeatureCard 
             icon={Cpu} 
-            title="Змінне кріплення" 
-            description="Універсальне кріплення для двигуна, яке легко замінити під ваші потреби."
+            title="Смарт-механіка" 
+            description="Кулачковий механізм власної розробки перетворює обертання на чисту силу натискання."
           />
           <FeatureCard 
             icon={Activity} 
-            title="Кулачковий механізм" 
-            description="Овальний кулачок перетворює обертання двигуна в точний лінійний рух натискання."
+            title="Енергонезалежність" 
+            description="Інтегроване кріплення під стандартні акумулятори дронів (Lipo 2S-6S через BEC)."
           />
           <FeatureCard 
             icon={Zap} 
-            title="Кабель-менеджмент" 
-            description="Інтегровані шляхи для проводки забезпечують чистоту та безпеку кабелів."
+            title="Мініатюризація" 
+            description="Вага модуля мінімізована для збереження льотних характеристик вашого БПЛА."
           />
           <FeatureCard 
             icon={Battery} 
-            title="Живлення дронів" 
-            description="Спеціальне кріплення для акумуляторів, сумісне з поширеними батареями для дронів."
+            title="Швидкість розробки" 
+            description="Модульний дизайн прискорює прототипування нових механічних інтерфейсів."
           />
         </div>
       </section>
@@ -272,35 +389,31 @@ export default function App() {
       {/* Video Demo Section */}
       <section id="demo" className="py-24 bg-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <SectionTitle subtitle="SYSTEM IN ACTION">ДЕМОНСТРАЦІЯ РОБОТИ</SectionTitle>
+          <SectionTitle subtitle="PROOF OF CONCEPT">ДЕМОНСТРАЦІЯ РОБОТИ</SectionTitle>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            <div>
-              <DemoVideo 
-                title="ОГЛЯД СИСТЕМИ" 
-                url="1E02iO8UoOk" 
-                type="youtube" 
-              />
+          <div className="mb-12">
+            <div className="glass-card p-8 border-l-4 border-brand-primary">
+              <p className="text-white/70 mb-4">
+                <span className="text-brand-primary font-bold">Випробувальний стенд:</span> Калібрування точності натискання на масо-габаритних макетах при використанні системи стабілізації камери.
+              </p>
+              <p className="text-sm text-white/50">
+                Це гарантує, що наша система працює з максимальною точністю, навіть у складних умовах реальних операцій.
+              </p>
             </div>
-            <DemoVideo 
-              title="ТЕСТУВАННЯ МЕХАНІЗМУ" 
-              url="CUe4MlYnYHY" 
-              type="youtube" 
-            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="glass-card p-8">
-              <h4 className="text-brand-primary font-mono text-xs mb-4">01. СТРУКТУРНА РАМА</h4>
-              <p className="text-sm text-white/60">Виготовлена з переробленого пластику, забезпечує міцність та екологічність.</p>
+              <h4 className="text-brand-primary font-mono text-xs mb-4">01. МЕХАНІЧНА БАЗА</h4>
+              <p className="text-sm text-white/60">Модульна архітектура със квадратними балками та метричними стрижнями позволяє швидко прототипувати нові конфігурації.</p>
             </div>
             <div className="glass-card p-8">
-              <h4 className="text-brand-primary font-mono text-xs mb-4">02. МОДУЛЬ АКТУАЦІЇ</h4>
-              <p className="text-sm text-white/60">Двигун постійного струму та 3D-друкований тримач для швидкої заміни.</p>
+              <h4 className="text-brand-primary font-mono text-xs mb-4">02. АКТУАЦІЙНИЙ МОДУЛЬ</h4>
+              <p className="text-sm text-white/60">Беззліночний двигун 720KV + кулачковий механізм для перетворення обертання на точне лінійне натискання.</p>
             </div>
             <div className="glass-card p-8">
-              <h4 className="text-brand-primary font-mono text-xs mb-4">03. МОДУЛЬ ЖИВЛЕННЯ</h4>
-              <p className="text-sm text-white/60">Гнучке розміщення батареї завдяки модульному інтерфейсу кріплення.</p>
+              <h4 className="text-brand-primary font-mono text-xs mb-4">03. ЕЛЕКТРОНІКА</h4>
+              <p className="text-sm text-white/60">ESC контролер з PWM управлінням та можливістю інтеграції з системами автопілота.</p>
             </div>
           </div>
         </div>
@@ -309,74 +422,29 @@ export default function App() {
       {/* Architecture Section */}
       <section id="architecture" className="py-24 max-w-6xl mx-auto px-6">
         <div className="flex flex-col items-center">
-          <SectionTitle subtitle="SYSTEM ARCHITECTURE">АРХІТЕКТУРА СИСТЕМИ</SectionTitle>
+          <SectionTitle subtitle="TECHNICAL STACK">АРХІТЕКТУРА СИСТЕМИ</SectionTitle>
           
-          {/* Images Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
-              <img 
-                src="./images/hero.jpg" 
-                alt="System Architecture" 
-                className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
-              <img 
-                src="./images/Detali1.png" 
-                alt="System Details 1" 
-                className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative group md:col-span-2"
-            >
-              <div className="absolute -inset-1 bg-brand-primary/20 blur opacity-25 group-hover:opacity-50 transition duration-1000" />
-              <img 
-                src="./images/Detali2.png" 
-                alt="System Details 2" 
-                className="relative rounded-xl border border-white/10 w-full object-cover shadow-2xl hover:brightness-110 transition-all duration-700"
-              />
-            </motion.div>
-          </div>
-
           {/* Text Description */}
-          <div className="space-y-8 text-left max-w-2xl">
+          <div className="space-y-8 text-left max-w-2xl w-full">
             <div className="flex gap-6">
               <div className="flex-shrink-0 w-12 h-12 rounded-full border border-brand-primary flex items-center justify-center text-brand-primary font-bold">1</div>
               <div>
-                <h4 className="text-xl font-bold mb-2">Structural Frame</h4>
-                <p className="text-white/60">Основа системи, що складається з балок та стрижнів, які формують жорсткий каркас.</p>
+                <h4 className="text-xl font-bold mb-2">Механічна база</h4>
+                <p className="text-white/60">Модульна система із квадратних поліаміду балок (30x30x250mm) та нержавіючих різьбових стрижнів М8 для регульованої довжини конструкції.</p>
               </div>
             </div>
             <div className="flex gap-6">
               <div className="flex-shrink-0 w-12 h-12 rounded-full border border-brand-primary flex items-center justify-center text-brand-primary font-bold">2</div>
               <div>
-                <h4 className="text-xl font-bold mb-2">Actuation Module</h4>
-                <p className="text-white/60">Серце пристрою: двигун та кулачок, що виконують механічну роботу.</p>
+                <h4 className="text-xl font-bold mb-2">Актуаційний модуль</h4>
+                <p className="text-white/60">720KV BLDC двигун + ESC контролер + кулачковий механізм (овальний кулачок 3D-друкований з Nylon CF) для перетворення обертання на лінійне натискання до 150N.</p>
               </div>
             </div>
             <div className="flex gap-6">
               <div className="flex-shrink-0 w-12 h-12 rounded-full border border-brand-primary flex items-center justify-center text-brand-primary font-bold">3</div>
               <div>
-                <h4 className="text-xl font-bold mb-2">Power Module</h4>
-                <p className="text-white/60">Система енергозабезпечення з інтегрованою проводкою та кріпленням батареї.</p>
+                <h4 className="text-xl font-bold mb-2">Системи управління</h4>
+                <p className="text-white/60">PWM управління (1000-2000µs) з можливістю інтеграції з BEC контролерами дронів або автономними мікроконтролерами (Arduino/STM32).</p>
               </div>
             </div>
           </div>
@@ -418,7 +486,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Startup Strategy Section */}
+      {/* Development Roadmap Section */}
       <section id="roadmap" className="py-24 bg-white/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -428,7 +496,7 @@ export default function App() {
               viewport={{ once: true }}
               className="text-5xl md:text-6xl font-display font-black tracking-tighter mb-4"
             >
-              ШЛЯХ ДО УСПІХУ
+              ПЛАН РОЗВИТКУ
             </motion.h2>
             <motion.p 
               initial={{ opacity: 0 }}
@@ -436,68 +504,64 @@ export default function App() {
               viewport={{ once: true }}
               className="text-lg text-white/60 max-w-3xl mx-auto"
             >
-              Не заводом ми почнемо, а перевіркою попиту. Реальна стратегія стартапу, яка працює.
+              Прозрачная дорожная карта від прототипу до комерційного запуску.
             </motion.p>
           </div>
 
-          {/* Four Stages */}
+          {/* Development Stages */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {[
               {
-                stage: "ЕТАП 1",
-                emoji: "🚀",
-                cost: "€300",
-                timeline: "Місяць 1-2",
-                title: "MVP + Перевірка",
+                stage: "ФАЗА 1",
+                emoji: "🔬",
+                timeline: "Май-Июнь 2026",
+                title: "Фінальне тестування",
                 points: [
-                  "1× 3D принтер",
-                  "Надрукуй 20-50 шт",
-                  "Тестуй продукт",
-                  "Продавай на OLX/Etsy"
+                  "Інтеграція з БПЛА",
+                  "Стресс-тести навантажень",
+                  "Оптимізація маси",
+                  "Вибір компонентів"
                 ],
-                goal: "10-50 продажів = Попит ✓"
+                goal: "Готовість до Crowdfunding"
               },
               {
-                stage: "ЕТАП 2",
-                emoji: "📱",
-                cost: "€500-3k",
-                timeline: "Місяць 3-4",
-                title: "Маркетинг & Спільнота",
+                stage: "ФАЗА 2",
+                emoji: "💰",
+                timeline: "Липень-Серпень 2026",
+                title: "Спільнокошт",
                 points: [
-                  "TikTok / YouTube",
-                  "Reddit / Telegram",
-                  "Discord сервер",
-                  "Зворотний зв'язок"
+                  "Запуск кампанії",
+                  "Комунікація з інвесторами",
+                  "Предзамовлення 50-100 шт",
+                  "Зворотній зв'язок"
                 ],
-                goal: "100-500 продажів"
+                goal: "Мета: €5-10k"
               },
               {
-                stage: "ЕТАП 3",
+                stage: "ФАЗА 3",
                 emoji: "🏭",
-                cost: "€3k-10k",
-                timeline: "Місяць 5-8",
-                title: "Масштаб без Заводу",
+                timeline: "Вересень-Листопад",
+                title: "Серійне виробництво",
                 points: [
-                  "Замовити в Китаї",
-                  "Аутсорсинг виробництва",
-                  "Без вложення в станки",
-                  "1000+ комплектів"
+                  "Замовлення компонентів",
+                  "Контракт з виробником",
+                  "Логістичні розрахунки",
+                  "Монтаж та тестування"
                 ],
-                goal: "Прибуток 20-30%"
+                goal: "Перша партія готова"
               },
               {
-                stage: "ЕТАП 4",
-                emoji: "🏢",
-                cost: "€50k+",
-                timeline: "Місяць 12+",
-                title: "Свій Завод",
+                stage: "ФАЗА 4",
+                emoji: "📦",
+                timeline: "Грудень 2026",
+                title: "Доставка & Поддержка",
                 points: [
-                  "Тільки якщо попит stабільний",
-                  "Екструдер + ін'єкція",
-                  "Або інвестор",
-                  "Масштаб без меж"
+                  "Прямі поставки бекерам",
+                  "Технічна поддержка",
+                  "Документація на укр/англ",
+                  "Сбор фідбеку"
                 ],
-                goal: "Міжнародна експансія"
+                goal: "Задоволені клієнти"
               }
             ].map((stage, idx) => (
               <motion.div
@@ -514,7 +578,6 @@ export default function App() {
                 </div>
                 <h3 className="text-xl font-display font-bold mb-1">{stage.title}</h3>
                 <div className="mb-4 space-y-1">
-                  <div className="text-2xl font-bold text-brand-primary">{stage.cost}</div>
                   <div className="text-xs text-white/40 font-mono">{stage.timeline}</div>
                 </div>
                 <ul className="space-y-2 mb-6">
@@ -535,17 +598,17 @@ export default function App() {
         </div>
       </section>
 
-      {/* Applications */}
-      <section className="py-24 max-w-7xl mx-auto px-6">
-        <SectionTitle subtitle="USE CASES">СФЕРИ ЗАСТОСУВАННЯ</SectionTitle>
+      {/* Use Cases */}
+      <section id="usecases" className="py-24 max-w-7xl mx-auto px-6">
+        <SectionTitle subtitle="REAL WORLD APPLICATIONS">СФЕРИ ЗАСТОСУВАННЯ</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="glass-card p-10 flex gap-6">
             <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center flex-shrink-0">
               <Settings className="w-8 h-8 text-brand-primary" />
             </div>
             <div>
-              <h4 className="text-2xl font-bold mb-4">Дистанційне керування</h4>
-              <p className="text-white/60">Активація фізичних елементів керування на відстані без втручання в електроніку пристрою.</p>
+              <h4 className="text-2xl font-bold mb-4">Remote Control 2.0</h4>
+              <p className="text-white/60">Натискання кнопок, перемикання тумблерів або скидання корисного навантаження без паяльника.</p>
             </div>
           </div>
           <div className="glass-card p-10 flex gap-6">
@@ -553,8 +616,8 @@ export default function App() {
               <Play className="w-8 h-8 text-brand-primary" />
             </div>
             <div>
-              <h4 className="text-2xl font-bold mb-4">Автоматизація на дронах</h4>
-              <p className="text-white/60">Легка та надійна система для виконання механічних дій під час польоту.</p>
+              <h4 className="text-2xl font-bold mb-4">Drone Mission Ready</h4>
+              <p className="text-white/60">Вага модуля мінімізована для збереження льотних характеристик вашого БПЛА.</p>
             </div>
           </div>
           <div className="glass-card p-10 flex gap-6">
@@ -562,44 +625,89 @@ export default function App() {
               <Cpu className="w-8 h-8 text-brand-primary" />
             </div>
             <div>
-              <h4 className="text-2xl font-bold mb-4">Прототипування робототехніки</h4>
-              <p className="text-white/60">Швидке створення механічних інтерфейсів для нових робототехнічних проектів.</p>
+              <h4 className="text-2xl font-bold mb-4">R&D Лабораторія</h4>
+              <p className="text-white/60">Швидке створення механічних інтерфейсів для ваших власних винаходів.</p>
             </div>
           </div>
           <div className="glass-card p-10 flex gap-6">
             <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <Shield className="w-8 h-8 text-brand-primary" />
+              <Activity className="w-8 h-8 text-brand-primary" />
             </div>
             <div>
-              <h4 className="text-2xl font-bold mb-4">Промислове тестування</h4>
-              <p className="text-white/60">Автоматизоване тестування кнопок та перемикачів на виробничих лініях.</p>
+              <h4 className="text-2xl font-bold mb-4">Industrial Testing</h4>
+              <p className="text-white/60">Можливість запрограмувати точні механічні дії для автоматизованих тестів.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Honesty & Risks Section */}
+      <section id="risks" className="py-24 bg-brand-primary/5">
+        <div className="max-w-4xl mx-auto px-6">
+          <SectionTitle subtitle="TRUST THROUGH TRANSPARENCY">ЧЕСНИЙ СТАРТАП</SectionTitle>
+          <p className="text-xl text-white/70 mb-12 leading-relaxed">
+            Ми <span className="text-brand-primary font-bold">не обіцяємо відправку завтра</span>. Ми обіцяємо розвиток технології разом з вами.
+          </p>
+          
+          <div className="space-y-8">
+            <div className="glass-card p-8 border-l-4 border-brand-primary">
+              <h4 className="text-xl font-bold mb-2 text-brand-primary">📦 Логістика</h4>
+              <p className="text-white/60">
+                Основні компоненти (мотори, контролери) замовляються у перевірених партнерів у Китаї та ЄС. 
+                <span className="block mt-2 font-mono text-sm text-brand-primary">Орієнтовний час: 45-60 днів</span>
+              </p>
+            </div>
+            
+            <div className="glass-card p-8 border-l-4 border-brand-primary">
+              <h4 className="text-xl font-bold mb-2 text-brand-primary">🖨️ Виробництво</h4>
+              <p className="text-white/60">
+                Ми використовуємо 3D-друк промислового рівня (Nylon/CF) для перших партій, щоб забезпечити максимальну стійкість. 
+                <span className="block mt-2 font-mono text-sm text-brand-primary">Стандартна толерантність: ±0.2mm</span>
+              </p>
+            </div>
+            
+            <div className="glass-card p-8 border-l-4 border-brand-primary">
+              <h4 className="text-xl font-bold mb-2 text-brand-primary">🧪 Випробування</h4>
+              <p className="text-white/60">
+                Кожен внесок наближає нас до реальних тестів з навантаженням на БПЛА та стабілізаторами. 
+                <span className="block mt-2 font-mono text-sm text-brand-primary">Результати публікуватимуться в оновленнях</span>
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-brand-primary rounded flex items-center justify-center">
-              <Settings className="text-black w-4 h-4" />
+      <footer className="py-16 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 bg-brand-primary rounded flex items-center justify-center">
+                  <Settings className="text-black w-4 h-4" />
+                </div>
+                <span className="font-display font-bold tracking-tighter">MODULAR ACTUATOR</span>
+              </div>
+              <p className="text-sm text-white/50">R&D Спільнокошт • 2026</p>
             </div>
-            <span className="font-display font-bold tracking-tighter">MODULAR ACTUATOR</span>
+            
+            <div>
+              <h4 className="font-mono text-xs text-brand-primary font-bold mb-4 uppercase">Контакти</h4>
+              <p className="text-sm text-white/60 mb-2">Маєте пропозиції або змахи на партнерство?</p>
+              <a href="mailto:andriy.liashkevich@gmail.com" className="text-brand-primary hover:text-white transition-colors font-mono text-sm">
+                andriy.liashkevich@gmail.com
+              </a>
+            </div>
+            
+            <div>
+              <h4 className="font-mono text-xs text-brand-primary font-bold mb-4 uppercase">Локація</h4>
+              <p className="text-sm text-white/60">Львів, Україна</p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-8 text-xs font-mono text-white/40">
-            <span>© 2026 МОДУЛЬНА СИСТЕМА ДИСТАНЦІЙНОГО КЕРУВАННЯ</span>
-            <a href="mailto:andriy.liashkevich@gmail.com" className="hover:text-brand-primary transition-colors">
-              andriy.liashkevich@gmail.com
-            </a>
-            <span className="flex items-center gap-2"><Shield className="w-3 h-3" /> ЛІЦЕНЗІЯ MIT</span>
-          </div>
-
-          <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors">
-              <LinkIcon className="w-4 h-4" />
-            </a>
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-white/40">
+            <span>© 2026 MODULAR REMOTE ACTUATOR SYSTEM</span>
+            <span className="flex items-center gap-2"><Shield className="w-3 h-3" /> MIT LICENSE</span>
           </div>
         </div>
       </footer>
